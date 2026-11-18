@@ -75,6 +75,31 @@ label.f input,label.f textarea{display:block;width:100%;margin-top:4px;padding:1
 .empty{text-align:center;color:var(--muted);padding:40px 10px}
 .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:26px}
 .big{max-width:100%;max-height:70vh;display:block;margin:0 auto;border-radius:14px}
+
+.sm-fab{position:fixed;right:14px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:15;width:56px;height:56px;border-radius:50%;border:0;background:var(--wine);color:#fff;font-size:26px;box-shadow:0 8px 22px rgba(60,10,20,.35);cursor:pointer}
+.sm-tip{position:fixed;right:78px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:15;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px 14px 4px 14px;padding:9px 30px 9px 12px;font-size:13.5px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.15);cursor:pointer;max-width:220px}
+.sm-tip b{position:absolute;right:8px;top:6px;font-weight:400;color:var(--muted);cursor:pointer;padding:0 4px}
+.sm-pan{position:fixed;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:25;width:min(380px,calc(100vw - 24px));max-height:min(620px,calc(100vh - 120px));display:flex;flex-direction:column;background:var(--bg);border:1px solid var(--line);border-radius:20px;box-shadow:0 18px 50px rgba(0,0,0,.3);overflow:hidden}
+.sm-hd{display:flex;align-items:center;gap:10px;padding:12px 14px;background:radial-gradient(120% 140% at 0% 0%,#8f2b44 0%,#5a1426 60%,#3a0d19 100%);color:#fbeee9}
+.sm-hd .av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.sm-hd .tt{flex:1;line-height:1.2}.sm-hd .tt b{display:block;font-size:15px}.sm-hd .tt small{opacity:.8;font-size:12px}
+.sm-hd button{border:0;background:none;color:#fbeee9;font-size:22px;cursor:pointer;padding:0 4px}
+.sm-bd{flex:1;overflow:auto;padding:12px 12px 6px}
+.sm-msg{max-width:88%;padding:9px 12px;border-radius:14px;margin:0 0 8px;font-size:14px;line-height:1.4}
+.sm-bot{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}
+.sm-me{background:var(--wine);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.sm-ops{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}
+.sm-ops button{border:1px solid var(--wine);background:var(--card);color:var(--wt);border-radius:99px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.sm-rec{display:flex;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin:0 0 8px}
+.sm-rec .im{width:52px;height:84px;flex:none;border-radius:8px;background:linear-gradient(180deg,var(--ph1),var(--ph2));display:flex;align-items:center;justify-content:center;overflow:hidden}
+.sm-rec .im img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}.sm-rec .im svg{height:70px}
+.sm-rec .tx{flex:1;min-width:0;font-size:12.5px;color:var(--muted)}
+.sm-rec .tx b{display:block;font-family:Fraunces,serif;font-size:15px;color:var(--ink);line-height:1.2}
+.sm-rec .tx i{display:block;font-style:normal;color:var(--ds);margin-top:3px}
+.sm-rec .rw{display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:6px}
+.sm-rec .rw span{font-family:Fraunces,serif;font-weight:600;font-size:15px;color:var(--wt)}
+.sm-rec .rw button{border:0;background:var(--wine);color:#fff;border-radius:10px;padding:6px 11px;font-weight:600;font-size:12.5px;cursor:pointer}
+.sm-rec .rw button.ok{background:var(--ok)}
 </style>
 </head>
 <body>
@@ -95,6 +120,7 @@ label.f input,label.f textarea{display:block;width:100%;margin-top:4px;padding:1
 </div>
 <div class="bar" id="bar" style="display:none"><button id="barBtn"></button></div>
 <div id="root"></div>
+<div id="sm"></div>
 <script src="catalogo.js"></script>
 <script>
 const D = window.CATALOGO || {vinhos:[]};
@@ -210,6 +236,87 @@ function temaBtn(){ const e=document.documentElement.dataset.tema==='escuro'; $(
 $('#tema').addEventListener('click',()=>{ const d=document.documentElement; if(d.dataset.tema==='escuro'){ delete d.dataset.tema; } else { d.dataset.tema='escuro'; } try{ localStorage.setItem('carta_tema', d.dataset.tema||'claro'); }catch(e){} temaBtn(); });
 temaBtn();
 render();
+
+/* ===== Assistente de escolha (sommelier) ===== */
+const SM={aberto:false,passo:0,oc:null,co:null,pr:null,vistos:[]};
+const SM_OC=[['dois','💑 Jantar a dois'],['churras','🔥 Churrasco com amigos'],['presente','🎁 Presente'],['festa','🥂 Comemoração'],['dia','🍽️ Dia a dia'],['relax','🛋️ Relaxar / tomar sem comida']];
+const SM_CO=[['vermelha','🥩 Carne vermelha'],['churras','🍖 Churrasco'],['massa','🍝 Massas e pizza'],['ave','🍗 Frango ou porco'],['peixe','🐟 Peixes e frutos do mar'],['queijo','🧀 Queijos e petiscos'],['asia','🍣 Comida asiática'],['doce','🍰 Sobremesa'],['nada','🍷 Sem comida']];
+const SM_PR=[['a','Até R$ 90'],['b','R$ 90 a 150'],['c','Acima de R$ 150'],['x','Tanto faz']];
+const SM_KW={vermelha:['picanha','bife','carne','cordeiro','costela','ossobuco','ancho','chorizo','carre','caca','nobres'],churras:['churrasco','picanha','costela','carne','hamburguer','linguica','defumad','calabresa','grelhad','barbecue'],massa:['massa','pizza','lasanha','ragu','molho','risoto','italiana','sugo'],ave:['frango','porco','suin','lombo','pato','ave'],peixe:['peixe','frutos do mar','salmao','atum','sushi','ceviche','bacalhau','camarao'],queijo:['queijo','frios','tabua','petisco','embutido','aperitivo'],asia:['asiatic','tailandes','indiana','sushi','oriental'],doce:['sobremesa','chocolate','bolo','panetone','fruta']};
+function smLbl(arr,k){ const x=arr.find(a=>a[0]===k); return x?x[1]:''; }
+function smScore(v){
+  const t=norm([v.harmonizacao,v.descricao,v.nome,v.uva].join(' ')); const nt=notaNum(v); let s=0;
+  const kw=SM_KW[SM.co]||[]; kw.forEach(k=>{ if(t.includes(k)) s+=3; });
+  const tipo=v.tipo, leve=/pinot|rose|branco|espumante|torront|chardonnay|semill/.test(norm(v.uva+' '+tipo));
+  if(['vermelha','churras'].includes(SM.co)){ if(tipo==='Tinto') s+=4; else s-=6; if(/malbec|cabernet|blend|syrah|tannat|bonarda/.test(norm(v.uva))) s+=2; }
+  if(SM.co==='massa'){ if(tipo==='Tinto') s+=3; if(/bonarda|blend|malbec|sangiovese/.test(norm(v.uva))) s+=1; }
+  if(SM.co==='ave'){ if(/pinot|chardonnay|rose|cabernet franc|blend/.test(norm(v.uva+' '+tipo))) s+=2; }
+  if(SM.co==='peixe'){ if(leve) s+=5; else s-=4; }
+  if(SM.co==='asia'){ if(/torront|laranja|rose|espumante|pinot|riesling|semill/.test(norm(v.uva+' '+tipo))) s+=5; else if(tipo==='Tinto') s-=2; }
+  if(SM.co==='doce'){ if(/sweet|doce|adocicad|suave/.test(t)) s+=8; else if(tipo==='Espumante') s+=3; else s-=2; }
+  if(SM.co==='queijo'){ s+=1; }
+  if(SM.co==='nada'){ if(/macio|frutad|facil|aveludad|leve/.test(t)) s+=3; }
+  if(SM.oc==='dois'){ if(nt) s+=2; if(/elegante|complexo|delicad|floral/.test(t)) s+=2; if(v.preco>=100) s+=1; }
+  if(SM.oc==='churras'){ if(tipo==='Tinto') s+=1; if(v.preco<=120) s+=2; if(/churrasco|hamburguer|picanha/.test(t)) s+=2; }
+  if(SM.oc==='presente'){ if(nt) s+=3+(nt>=95?2:0); if(/icone|alta gama|premiad|topo|longev|grand cru/.test(t)) s+=3; if(v.preco>=150) s+=2; }
+  if(SM.oc==='festa'){ if(tipo==='Espumante') s+=6; if(nt) s+=1; }
+  if(SM.oc==='dia'){ if(v.preco<=100) s+=3; if(/dia a dia|facil|custo-beneficio|jovem|descomplicad/.test(t)) s+=3; if(v.preco>180) s-=3; }
+  if(SM.oc==='relax'){ if(/macio|frutad|facil|aveludad|suave/.test(t)) s+=3; }
+  if(nt) s+=nt/100; if(Number(v.estoque)>=3) s+=.2;
+  return s;
+}
+function smFaixa(v){ const p=v.preco; return SM.pr==='a'?p<=90: SM.pr==='b'?(p>90&&p<=150): SM.pr==='c'?p>150: true; }
+function smPor(v){
+  const r=[]; const nt=v.nota?`★ ${v.nota}. `:'';
+  if(v.harmonizacao) r.push('Combina com '+v.harmonizacao.replace(/\.$/,'').toLowerCase()+'.');
+  return nt+(r[0]||v.descricao||'');
+}
+function smRecs(){
+  let l=V.filter(smFaixa); if(l.length<3) l=V.slice();
+  l=l.map(v=>({v,s:smScore(v)})).filter(x=>!SM.vistos.includes(x.v.id)).sort((a,b)=>b.s-a.s||a.v.preco-b.v.preco);
+  const out=[]; const bod={};
+  for(const x of l){ const b=norm(x.v.produtor); if(bod[b]&&SM.oc!=='festa'){ continue; } bod[b]=1; out.push(x.v); if(out.length===3) break; }
+  if(out.length<3) for(const x of l){ if(!out.includes(x.v)) out.push(x.v); if(out.length===3) break; }
+  return out;
+}
+function smFoto(v){ return v.foto?`<img src="${esc(v.foto)}" alt="" onerror="this.parentNode.innerHTML=garrafa('${esc(v.tipo)}')">`:garrafa(v.tipo); }
+function smRender(){
+  const el=$('#sm');
+  if(!SM.aberto){
+    let tip=''; try{ if(!sessionStorage.getItem('sm_tip')) tip='<div class="sm-tip" data-sm="abrir">Precisa de ajuda para escolher?<b data-sm="fechatip">×</b></div>'; }catch(e){}
+    el.innerHTML=tip+'<button class="sm-fab" data-sm="abrir" aria-label="Ajuda para escolher o vinho">🍷</button>'; return;
+  }
+  let b='<div class="sm-msg sm-bot">Olá! 🍷 Eu te ajudo a escolher o vinho certo.</div>';
+  const ops=(arr,acao)=>`<div class="sm-ops">${arr.map(([k,l])=>`<button data-sm="${acao}" data-v="${k}">${l}</button>`).join('')}</div>`;
+  b+='<div class="sm-msg sm-bot">Para qual ocasião é o vinho?</div>';
+  if(SM.passo===0) b+=ops(SM_OC,'oc'); else b+=`<div class="sm-msg sm-me">${smLbl(SM_OC,SM.oc)}</div>`;
+  if(SM.passo>=1){ b+='<div class="sm-msg sm-bot">E o que vai ser servido?</div>'; if(SM.passo===1) b+=ops(SM_CO,'co'); else b+=`<div class="sm-msg sm-me">${smLbl(SM_CO,SM.co)}</div>`; }
+  if(SM.passo>=2){ b+='<div class="sm-msg sm-bot">Quanto quer investir por garrafa?</div>'; if(SM.passo===2) b+=ops(SM_PR,'pr'); else b+=`<div class="sm-msg sm-me">${smLbl(SM_PR,SM.pr)}</div>`; }
+  if(SM.passo>=3){
+    const r=smRecs(); SM.ultimos=r.map(v=>v.id);
+    b+= r.length? '<div class="sm-msg sm-bot">Minhas sugestões para você:</div>' : '<div class="sm-msg sm-bot">Não encontrei mais opções com esse perfil. Que tal recomeçar?</div>';
+    b+=r.map(v=>{ const q=cart[v.id]||0; return `<div class="sm-rec"><div class="im">${smFoto(v)}</div><div class="tx"><b>${esc(v.nome)}</b>${esc([v.produtor,v.uva].filter(Boolean).join(' · '))}<i>${esc(smPor(v))}</i><div class="rw"><span>${brl(v.preco)}</span><button data-sm="add" data-v="${v.id}" class="${q?'ok':''}">${q?`✓ No pedido (${q})`:'Adicionar'}</button></div></div></div>`; }).join('');
+    b+=`<div class="sm-ops">${r.length?'<button data-sm="mais">🔄 Outras opções</button>':''}<button data-sm="reset">↺ Recomeçar</button>${Object.keys(cart).length?'<button data-sm="pedido">🛒 Ver pedido</button>':''}</div>`;
+  }
+  el.innerHTML=`<div class="sm-pan"><div class="sm-hd"><div class="av">🍷</div><div class="tt"><b>Sommelier</b><small>Te ajudo a escolher</small></div><button data-sm="fechar" aria-label="Fechar">×</button></div><div class="sm-bd" id="smbd">${b}</div></div>`;
+  const bd=$('#smbd'); bd.scrollTop=bd.scrollHeight;
+}
+$('#sm').addEventListener('click',e=>{
+  const t=e.target.closest('[data-sm]'); if(!t) return; e.stopPropagation();
+  const a=t.dataset.sm, v=t.dataset.v;
+  if(a==='fechatip'){ try{ sessionStorage.setItem('sm_tip','1'); }catch(_){} smRender(); return; }
+  if(a==='abrir'){ SM.aberto=true; try{ sessionStorage.setItem('sm_tip','1'); }catch(_){} }
+  else if(a==='fechar'){ SM.aberto=false; }
+  else if(a==='oc'){ SM.oc=v; SM.passo=1; }
+  else if(a==='co'){ SM.co=v; SM.passo=2; }
+  else if(a==='pr'){ SM.pr=v; SM.passo=3; SM.vistos=[]; }
+  else if(a==='mais'){ SM.vistos=SM.vistos.concat(SM.ultimos||[]); }
+  else if(a==='reset'){ SM.passo=0; SM.oc=SM.co=SM.pr=null; SM.vistos=[]; }
+  else if(a==='add'){ mais(v); render(); toast('Adicionado ao pedido ✓'); }
+  else if(a==='pedido'){ SM.aberto=false; smRender(); pedido(); return; }
+  smRender();
+});
+smRender();
 </script>
 </body>
 </html>
