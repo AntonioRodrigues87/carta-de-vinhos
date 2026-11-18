@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carta de Vinhos</title>
+<meta property="og:title" content="Carta de Vinhos">
+<meta property="og:description" content="Escolha seus vinhos e envie o pedido pelo WhatsApp.">
+<meta name="description" content="Escolha seus vinhos e envie o pedido pelo WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f1ea;--card:#fffdf9;--ink:#2a1d1b;--muted:#7d6c66;--line:#e9dfd3;--wine:#6e1a2f;--wine2:#8f2b44;--soft:#f2e3e5;--gold:#a8812f;--goldSoft:#f6ecd6;--ok:#2f7a4b;}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+.hero{background:radial-gradient(120% 140% at 0% 0%,#8f2b44 0%,#5a1426 55%,#3a0d19 100%);color:#fbeee9;padding:calc(env(safe-area-inset-top) + 34px) 22px 30px}
+.hero .in{max-width:980px;margin:0 auto}
+.hero small{letter-spacing:.18em;text-transform:uppercase;font-size:11.5px;opacity:.75}
+.hero h1{font-family:Fraunces,serif;font-weight:600;font-size:34px;line-height:1.1;margin:8px 0 8px;letter-spacing:-.01em}
+.hero p{margin:0;opacity:.85;max-width:560px}
+.wrap{max-width:980px;margin:0 auto;padding:0 14px calc(110px + env(safe-area-inset-bottom))}
+.tools{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;margin-bottom:4px}
+.search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:7px 13px;font-size:13.5px;white-space:nowrap;cursor:pointer}
+.chip.on{background:var(--wine);border-color:var(--wine);color:#fff}
+.count{font-size:12.5px;color:var(--muted);margin:6px 2px 10px}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.bod{grid-column:1/-1;margin:18px 2px 0;font-size:17px;font-weight:700;color:var(--wine);display:flex;align-items:baseline;gap:8px;border-bottom:1px solid var(--line);padding-bottom:6px}.bod:first-child{margin-top:4px}.bod small{font-size:12px;font-weight:500;color:var(--muted)}
+@media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
+.w{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;gap:14px;box-shadow:0 1px 2px rgba(60,30,20,.05)}
+.ph{width:92px;flex:none;height:150px;border-radius:12px;background:linear-gradient(180deg,#f3ebe2,#ece0d3);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
+.ph img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}
+.ph svg{height:122px}
+.bd{flex:1;min-width:0;display:flex;flex-direction:column}
+.nm{font-family:Fraunces,serif;font-size:18px;font-weight:600;line-height:1.2;margin:0}
+.meta{font-size:12.5px;color:var(--muted);margin-top:3px}
+.nota{display:inline-flex;align-items:center;gap:5px;background:var(--goldSoft);color:var(--gold);font-weight:600;font-size:12px;border-radius:8px;padding:3px 8px;margin-top:7px;align-self:flex-start}
+.ds{font-size:13.5px;margin:8px 0 0;color:#4b3b37}
+.hm{font-size:13px;margin:6px 0 0;color:var(--muted)}
+.hm b{color:var(--ink);font-weight:600}
+.ft{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px;gap:8px}
+.pr{font-family:Fraunces,serif;font-size:20px;font-weight:600;color:var(--wine)}
+.pr small{font-family:Inter;font-size:11px;color:var(--muted);font-weight:400;display:block;margin-top:-2px}
+.ult{font-size:11.5px;color:#b3261e;font-weight:600}
+.add{border:0;background:var(--wine);color:#fff;border-radius:12px;padding:9px 15px;font-weight:600;cursor:pointer}
+.step{display:flex;align-items:center;border:1px solid var(--wine);border-radius:12px;overflow:hidden}
+.step button{border:0;background:var(--soft);color:var(--wine);width:36px;height:36px;font-size:18px;font-weight:600;cursor:pointer}
+.step span{min-width:30px;text-align:center;font-weight:600}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(246,241,234,0),var(--bg) 35%)}
+.bar button{width:100%;max-width:560px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;border:0;background:var(--wine);color:#fff;border-radius:16px;padding:14px 18px;font-weight:600;font-size:15.5px;box-shadow:0 8px 24px rgba(110,26,47,.35);cursor:pointer}
+.sheet-bg{position:fixed;inset:0;background:rgba(25,10,12,.5);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:700px){.sheet-bg{align-items:center}}
+.sheet{background:var(--bg);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom))}
+@media(min-width:700px){.sheet{border-radius:22px}}
+.sheet h2{font-family:Fraunces,serif;font-size:24px;margin:0 0 12px;font-weight:600}
+.li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.li .n{flex:1;min-width:0;font-size:14px}
+.li .n small{display:block;color:var(--muted)}
+.tot{display:flex;justify-content:space-between;font-weight:600;font-size:17px;margin:14px 2px}
+label.f{display:block;font-size:12.5px;color:var(--muted);margin-bottom:10px;font-weight:500}
+label.f input,label.f textarea{display:block;width:100%;margin-top:4px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px}
+.acts{display:grid;gap:8px;margin-top:12px}
+.btn{border:0;border-radius:14px;padding:13px;font-weight:600;cursor:pointer;font-size:15px;text-align:center;text-decoration:none;display:block}
+.btn.wa{background:#1f8f4e;color:#fff}.btn.cp{background:var(--wine);color:#fff}.btn.gh{background:none;border:1px solid var(--line);color:var(--muted)}
+.pre{white-space:pre-wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;margin-top:10px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;z-index:30;font-size:14px}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:26px}
+.big{max-width:100%;max-height:70vh;display:block;margin:0 auto;border-radius:14px}
+</style>
+</head>
+<body>
+<div class="hero"><div class="in">
+  <small id="hSub">Seleção especial</small>
+  <h1 id="hTit">Carta de Vinhos</h1>
+  <p id="hTxt">Escolha seus vinhos, monte o pedido e envie pelo WhatsApp.</p>
+</div></div>
+<div class="wrap">
+  <div class="tools">
+    <input class="search" id="q" placeholder="Buscar vinho, uva, vinícola ou prato…">
+    <div class="chips" id="tipos"></div>
+    <div class="chips" id="ord"></div>
+  </div>
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+  <div class="foot" id="foot"></div>
+</div>
+<div class="bar" id="bar" style="display:none"><button id="barBtn"></button></div>
+<div id="root"></div>
+<script src="catalogo.js"></script>
+<script>
+const D = window.CATALOGO || {vinhos:[]};
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl = n=>(Number(n)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const norm = s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+function toast(t){ const e=document.createElement('div'); e.className='toast'; e.textContent=t; document.body.appendChild(e); setTimeout(()=>e.remove(),2200); }
+const V = (D.vinhos||[]).filter(v=>Number(v.estoque)>0);
+const byId = id=>V.find(v=>v.id===id);
+let cart = {}; try{ cart=JSON.parse(localStorage.getItem('carta_cart')||'{}')||{}; }catch{}
+Object.keys(cart).forEach(k=>{ const v=byId(k); if(!v) delete cart[k]; else cart[k]=Math.min(cart[k],Number(v.estoque)); });
+let dados={}; try{ dados=JSON.parse(localStorage.getItem('carta_dados')||'{}')||{}; }catch{}
+const save=()=>{ try{ localStorage.setItem('carta_cart',JSON.stringify(cart)); localStorage.setItem('carta_dados',JSON.stringify(dados)); }catch{} };
+const st={tipo:'Todos',ord:'bod',q:''};
+
+if(D.titulo) $('#hTit').textContent=D.titulo;
+if(D.subtitulo) $('#hSub').textContent=D.subtitulo;
+if(D.texto) $('#hTxt').textContent=D.texto;
+if(D.titulo) document.title=D.titulo;
+$('#foot').textContent='Preços por garrafa · sujeitos à disponibilidade'+(D.atualizado?' · atualizado em '+D.atualizado:'');
+
+const COR={Tinto:['#5a1426','#8f2b44'],Branco:['#c9b25c','#e6d68a'],'Rosé':['#d27a8c','#efb3bf'],Espumante:['#b9a35a','#e3d394'],Destilado:['#6b6f73','#a8adb2'],Outro:['#7a6a4f','#b3a07c']};
+function garrafa(tipo){ const [a,b]=COR[tipo]||COR.Tinto; const id='g'+Math.random().toString(36).slice(2,7);
+  return `<svg viewBox="0 0 40 130"><defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${a}"/><stop offset=".55" stop-color="${b}"/><stop offset="1" stop-color="${a}"/></linearGradient></defs>
+  <rect x="15" y="2" width="10" height="10" rx="1.5" fill="#3a2a22"/><path d="M15 12h10v22c0 6 10 10 10 22v68a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V56c0-12 10-16 10-22z" fill="url(#${id})"/>
+  <rect x="7" y="70" width="26" height="30" rx="2" fill="#f6efe3" opacity=".92"/><rect x="11" y="78" width="18" height="2" fill="${a}" opacity=".6"/><rect x="13" y="84" width="14" height="1.5" fill="${a}" opacity=".4"/></svg>`; }
+
+const TIPOS=['Todos',...['Tinto','Branco','Rosé','Espumante','Destilado','Outro'].filter(t=>V.some(v=>v.tipo===t))];
+const LBL={Todos:'Todos',Tinto:'Tintos',Branco:'Brancos','Rosé':'Rosés',Espumante:'Espumantes',Destilado:'Destilados',Outro:'Outros'};
+const ORD=[['bod','Por bodega'],['dest','Destaques'],['nota','Melhor avaliados'],['menor','Menor preço'],['maior','Maior preço']];
+function chips(){
+  $('#tipos').innerHTML=TIPOS.map(t=>`<button class="chip ${st.tipo===t?'on':''}" data-t="${t}">${LBL[t]}</button>`).join('');
+  $('#ord').innerHTML=ORD.map(([k,l])=>`<button class="chip ${st.ord===k?'on':''}" data-o="${k}">${l}</button>`).join('');
+}
+const notaNum=v=>{ const m=String(v.nota||'').match(/(\d{2,3})/); return m?+m[1]:0; };
+const bodNome=v=>{ let b=String(v.produtor||'').trim().replace(/^bodegas?\s+/i,''); if(/^vina cobos$/i.test(b)) b='Viña Cobos'; return b||'Outros'; };
+function lista(){
+  let l=V.slice(); if(st.tipo!=='Todos') l=l.filter(v=>v.tipo===st.tipo);
+  if(st.q){ const q=norm(st.q); l=l.filter(v=>norm([v.nome,v.produtor,v.uva,v.pais,v.harmonizacao,v.descricao].join(' ')).includes(q)); }
+  const cmp=(a,b)=>a.localeCompare(b,'pt',{sensitivity:'base',numeric:true});
+  if(st.ord==='bod') l.sort((a,b)=>(bodNome(a)==='Outros')-(bodNome(b)==='Outros') || cmp(bodNome(a),bodNome(b)) || cmp(a.nome,b.nome));
+  if(st.ord==='dest') l.sort((a,b)=>(notaNum(b)>0)-(notaNum(a)>0) || (b.foto?1:0)-(a.foto?1:0) || a.nome.localeCompare(b.nome));
+  if(st.ord==='nota') l.sort((a,b)=>notaNum(b)-notaNum(a) || a.preco-b.preco);
+  if(st.ord==='menor') l.sort((a,b)=>a.preco-b.preco);
+  if(st.ord==='maior') l.sort((a,b)=>b.preco-a.preco);
+  return l;
+}
+function render(){
+  chips(); const l=lista();
+  $('#count').textContent = l.length+' '+(l.length===1?'rótulo':'rótulos');
+  const card=v=>{ const q=cart[v.id]||0;
+    return `<div class="w"><div class="ph" data-ft="${v.id}">${v.foto?`<img src="${esc(v.foto)}" alt="${esc(v.nome)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.innerHTML=garrafa('${esc(v.tipo)}')">`:garrafa(v.tipo)}</div>
+    <div class="bd"><h3 class="nm">${esc(v.nome)}</h3><div class="meta">${esc([v.produtor,v.uva,v.pais].filter(Boolean).join(' · '))}</div>
+    ${v.nota?`<span class="nota">★ ${esc(v.nota)}</span>`:''}
+    ${v.descricao?`<p class="ds">${esc(v.descricao)}</p>`:''}
+    ${v.harmonizacao?`<p class="hm">🍽 <b>Combina com:</b> ${esc(v.harmonizacao)}</p>`:''}
+    <div class="ft"><div class="pr">${brl(v.preco)}<small>${Number(v.estoque)<=2?`<span class="ult">últimas ${v.estoque} un.</span>`:'por garrafa'}</small></div>
+    ${q?`<div class="step"><button data-m="${v.id}">−</button><span>${q}</span><button data-p="${v.id}">+</button></div>`:`<button class="add" data-p="${v.id}">Adicionar</button>`}</div></div></div>`; };
+  let h='';
+  if(st.ord==='bod'){ let cur=null; l.forEach(v=>{ const b=bodNome(v); if(b!==cur){ cur=b; const n=l.filter(x=>bodNome(x)===b).length; h+=`<h2 class="bod">${esc(b)}<small>${n} ${n===1?'rótulo':'rótulos'}</small></h2>`; } h+=card(v); }); }
+  else h=l.map(card).join('');
+  $('#grid').innerHTML = h || '<div class="empty">Nenhum vinho encontrado.</div>';
+  barra();
+}
+function totais(){ let n=0,t=0; Object.entries(cart).forEach(([id,q])=>{ const v=byId(id); if(v){ n+=q; t+=q*v.preco; } }); return {n,t}; }
+function barra(){ const {n,t}=totais(); $('#bar').style.display=n?'':'none'; $('#barBtn').innerHTML=`<span>Ver pedido · ${n} garrafa${n>1?'s':''}</span><span>${brl(t)}</span>`; }
+function mais(id){ const v=byId(id); const q=(cart[id]||0); if(q>=Number(v.estoque)){ toast('Só temos '+v.estoque+' em estoque'); return; } cart[id]=q+1; save(); }
+function menos(id){ cart[id]=(cart[id]||0)-1; if(cart[id]<=0) delete cart[id]; save(); }
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-t],[data-o],[data-p],[data-m],[data-ft]'); if(!t) return;
+  if(t.dataset.t){ st.tipo=t.dataset.t; render(); }
+  else if(t.dataset.o){ st.ord=t.dataset.o; render(); }
+  else if(t.dataset.p){ mais(t.dataset.p); if(t.closest('.sheet')) pedido(); else render(); }
+  else if(t.dataset.m){ menos(t.dataset.m); if(t.closest('.sheet')) pedido(); else render(); }
+  else if(t.dataset.ft){ const v=byId(t.dataset.ft); if(v&&v.foto) abrir(`<img class="big" src="${esc(v.foto)}" alt="" referrerpolicy="no-referrer"><div class="acts"><button class="btn gh" data-x>Fechar</button></div>`); }
+});
+$('#q').addEventListener('input',e=>{ st.q=e.target.value; render(); });
+$('#barBtn').addEventListener('click',()=>pedido());
+
+function abrir(html){ $('#root').innerHTML=`<div class="sheet-bg"><div class="sheet">${html}</div></div>`; const bg=$('#root').firstChild; bg.addEventListener('click',e=>{ if(e.target===bg||e.target.closest('[data-x]')) fechar(); }); return bg; }
+function fechar(){ $('#root').innerHTML=''; render(); }
+
+function mensagem(){
+  const linhas=[]; let n=0,t=0;
+  Object.entries(cart).forEach(([id,q])=>{ const v=byId(id); if(!v) return; n+=q; t+=q*v.preco; linhas.push(`${q}x ${v.nome} — ${brl(q*v.preco)}`); });
+  const cab=['🍷 *Pedido de vinhos*', `Nome: ${dados.nome||''}`]; if(dados.tel) cab.push(`WhatsApp: ${dados.tel}`); if(dados.obs) cab.push(`Obs: ${dados.obs.replace(/\n/g,' ')}`);
+  return [...cab, '', ...linhas, '', `*Total: ${brl(t)}* (${n} garrafa${n>1?'s':''})`].join('\n');
+}
+function pedido(){
+  const its=Object.entries(cart).map(([id,q])=>({v:byId(id),q})).filter(x=>x.v);
+  if(!its.length){ fechar(); return; }
+  const {n,t}=totais();
+  const bg=abrir(`<h2>Seu pedido</h2>
+   ${its.map(({v,q})=>`<div class="li"><div class="n">${esc(v.nome)}<small>${brl(v.preco)} cada</small></div><div class="step"><button data-m="${v.id}">−</button><span>${q}</span><button data-p="${v.id}">+</button></div></div>`).join('')}
+   <div class="tot"><span>Total · ${n} garrafa${n>1?'s':''}</span><span>${brl(t)}</span></div>
+   <label class="f">Seu nome *<input id="fn" value="${esc(dados.nome||'')}" autocomplete="name"></label>
+   <label class="f">Seu WhatsApp<input id="ft" value="${esc(dados.tel||'')}" inputmode="tel" autocomplete="tel" placeholder="(49) 99999-9999"></label>
+   <label class="f">Observação / entrega<textarea id="fo" rows="2" placeholder="Endereço, melhor horário, forma de pagamento…">${esc(dados.obs||'')}</textarea></label>
+   <div class="acts"><button class="btn wa" data-wa="5542988363602">Enviar para WhatsApp Guto</button><button class="btn wa" data-wa="5542999445162">Enviar para WhatsApp João Lucas</button><button class="btn cp" id="bc">Copiar pedido</button><button class="btn gh" data-x>Continuar escolhendo</button></div>
+   <div class="pre" id="pv" style="display:none"></div>`);
+  const sync=()=>{ dados.nome=bg.querySelector('#fn').value.trim(); dados.tel=bg.querySelector('#ft').value.trim(); dados.obs=bg.querySelector('#fo').value.trim(); save(); };
+  ['#fn','#ft','#fo'].forEach(s=>bg.querySelector(s).addEventListener('input',sync));
+  const ok=()=>{ sync(); if(!dados.nome){ toast('Coloque seu nome'); bg.querySelector('#fn').focus(); return false; } return true; };
+  bg.querySelector('#bc').onclick=async()=>{ if(!ok()) return; const m=mensagem(); const pv=bg.querySelector('#pv'); pv.style.display=''; pv.textContent=m;
+    try{ await navigator.clipboard.writeText(m); toast('Pedido copiado ✓ Agora é só colar no WhatsApp'); }catch{ toast('Selecione o texto abaixo e copie'); } };
+  bg.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>{ if(!ok()) return; const m=mensagem(); const num=b.dataset.wa;
+    const url='https://wa.me/'+(num?num:'')+'?text='+encodeURIComponent(m); window.location.href=url;
+    const pv=bg.querySelector('#pv'); pv.style.display=''; pv.textContent=m; });
+}
+render();
+</script>
+</body>
+</html>
