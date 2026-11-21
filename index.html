@@ -121,7 +121,7 @@ label.f input,label.f textarea{display:block;width:100%;margin-top:4px;padding:1
 <div class="bar" id="bar" style="display:none"><button id="barBtn"></button></div>
 <div id="root"></div>
 <div id="sm"></div>
-<script src="catalogo.js"></script>
+<script>document.write('<script src="catalogo.js?v='+Date.now()+'"><\/script>')</script>
 <script>
 const D = window.CATALOGO || {vinhos:[]};
 const $ = s=>document.querySelector(s);
